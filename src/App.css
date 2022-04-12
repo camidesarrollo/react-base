@@ -1,38 +1,104 @@
-.App {
-  text-align: center;
+
+button.fill:hover,
+button.fill:focus {
+  box-shadow: inset 0 0 0 2em var(--hover);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+button.pulse:hover,
+button.pulse:focus {
+  -webkit-animation: pulse 1s;
+          animation: pulse 1s;
+  box-shadow: 0 0 0 2em transparent;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+@-webkit-keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--hover);
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--hover);
+  }
+}
+button.close:hover,
+button.close:focus {
+  box-shadow: inset -3.5em 0 0 0 var(--hover), inset 3.5em 0 0 0 var(--hover);
 }
 
-.App-link {
-  color: #61dafb;
+button.raise:hover,
+button.raise:focus {
+  box-shadow: 0 0.5em 0.5em -0.4em var(--hover);
+  transform: translateY(-0.25em);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+button.up:hover,
+button.up:focus {
+  box-shadow: inset 0 -3.25em 0 0 var(--hover);
+}
+
+button.slide:hover,
+button.slide:focus {
+  box-shadow: inset 6.5em 0 0 0 var(--hover);
+}
+
+button.offset {
+  box-shadow: 0.3em 0.3em 0 0 var(--color), inset 0.3em 0.3em 0 0 var(--color);
+}
+button.offset:hover, button.offset:focus {
+  box-shadow: 0 0 0 0 var(--hover), inset 6em 3.5em 0 0 var(--hover);
+}
+
+button.fill {
+  --color: #a972cb;
+  --hover: #cb72aa;
+}
+
+button.pulse {
+  --color: #ef6eae;
+  --hover: #ef8f6e;
+}
+
+button.close {
+  --color: #ff7f82;
+  --hover: #ffdc7f;
+}
+
+button.raise {
+  --color: #ffa260;
+  --hover: #e5ff60;
+}
+
+button.up {
+  --color: #e4cb58;
+  --hover: #94e458;
+}
+
+button.slide {
+  --color: #8fc866;
+  --hover: #66c887;
+}
+
+button.offset {
+  --color: #19bc8b;
+  --hover: #1973bc;
+}
+
+button.fill {
+  color: var(--color);
+  transition: 0.25s;
+}
+button.fill:hover, button.fill:focus {
+  border-color: var(--hover);
+  color: #fff;
+}
+
+button.fill {
+  background: none;
+  border: 2px solid;
+  font: inherit;
+  line-height: 1;
+  margin: 0.5em;
+  padding: 1em 2em;
 }

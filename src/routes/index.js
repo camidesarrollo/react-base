@@ -22,33 +22,12 @@ import { ReactReduxContext } from 'react-redux';
 import AuthLogin3 from '../Pages/authentication/authentication3/Login3';
 import DashboardDefault from '../Pages/dashboard/Default/index';
 import MinimalLayout from '../Components/Layout/MinimalLayout/index'
+import Mantenedor_Menu from '../Pages/configuraciones/MantenedorManu';
+import MantenedorUsuario from '../Pages/configuraciones/MantenedorUsuario';
+import MantenedorPerfil from '../Pages/configuraciones/MantenedorPerfil';
+import Perfil from '../Pages/configuraciones/Perfil';
+
 const ThemeRoutes = () => {
-    // const { userData } = ReactReduxContext (UserContext);
-
-    // const [isLoged, setIsLoged] = useState(false); //MANEJA ESTADOS,  setIsLoged SETER DE LA VARIABLE DE AL LADO (INTERNO DE REACT)
-
-    // useEffect(() => { //EJECUTA EL CONTENDIO DE FUNCION CUANDO CAMBIE EL CONTENIDO DE LOS []
-    //     if (userData.user != null) {
-    //         setIsLoged(true);
-    //     } else {
-    //         setIsLoged(false);
-    //     }
-
-    // }, [userData.user])
-
-    // useEffect(() => { //EJECUTA EL CONTENDIO DE FUNCION CUANDO CAMBIE EL CONTENIDO DE LOS []
-    //     console.log(userData)
-    // })
-
-    // window.onbeforeunload = (event) => {
-    //     const e = event || window.event;
-    //     e.preventDefault();
-    //     if (e) {
-    //         e.returnValue = "";
-    //     }
-    //     return "";
-    // };
-    // MainLayout
 
     return (
         <Routes>
@@ -57,6 +36,10 @@ const ThemeRoutes = () => {
             </Route>
             <Route element={<MainLayout> <Outlet /> </MainLayout>}>
                 <Route exact path="/home" element={<DashboardDefault />} />
+                <Route exact path="/configuraciones/mantenedor_menu" element={<Mantenedor_Menu />} />
+                <Route exact path="/configuraciones/mantenedor_usuario" element={<MantenedorUsuario />} />
+                <Route exact path="/configuraciones/mantenedor_perfil" element={<MantenedorPerfil/>} />
+                <Route exact path="/configuraciones/perfil" element={<Perfil/>} />
             </Route>
             {/* <Route exact path="/home" element={<Home />} />
                         <Route exact path="configuraciones/mantenedor_perfil" element={<MantenedorPerfil />} />

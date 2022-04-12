@@ -1,0 +1,237 @@
+.css-e8p490 {
+	color: rgb(97, 97, 97);
+	transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+	box-shadow: none;
+	border-radius: 8px;
+	overflow: hidden;
+	margin-bottom: 24px;
+	border: 1px solid rgba(144, 202, 249, 0.46);
+	background: rgb(255, 255, 255);
+}
+.css-b09laf {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row wrap;
+    margin-top: -8px;
+    width: calc(100% + 8px);
+    margin-left: -8px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.css-1xqoed8{
+    display: flex;
+    flex-direction: row;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.css-1kb0wuq{
+    max-width: 100%;
+    font-family: Inter, sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 0.8125rem;
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    height: 24px;
+    border-radius: 16px;
+    white-space: nowrap;
+    transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    cursor: default;
+    outline: 0px;
+    text-decoration: none;
+    border: 0px;
+    padding: 0px;
+    vertical-align: middle;
+    box-sizing: border-box;
+    // color: rgb(86, 202, 0);
+    // background-color: rgba(86, 202, 0, 0.12);
+    text-transform: capitalize;
+}
+
+.css-jho0db{
+    max-width: 100%;
+    font-family: Inter, sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 0.8125rem;
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    height: 24px;
+    border-radius: 16px;
+    white-space: nowrap;
+    transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    cursor: default;
+    outline: 0px;
+    text-decoration: none;
+    border: 0px;
+    padding: 0px;
+    vertical-align: middle;
+    box-sizing: border-box;
+    color: rgb(138, 141, 147);
+    background-color: rgba(138, 141, 147, 0.12);
+    text-transform: capitalize;
+}
+
+.css-70qvj9{
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.css-zjx26z{
+    user-select: none;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    fill: currentcolor;
+    flex-shrink: 0;
+    transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    font-size: 1.25rem;
+    margin-right: 0.75rem;
+    color: rgb(22, 177, 255);
+}
+
+.css-x6zmnr{
+    margin: 0px;
+    font-family: Inter, sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+    letter-spacing: 0.15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: rgba(58, 53, 65, 0.68);
+    text-transform: capitalize;
+}
+
+.css-p38jk0{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.css-1h9hznn{
+    margin-right: 0.75rem;
+    width: 30px;
+    height: 30px;
+    font-size: 0.875rem;
+}
+
+.MuiDataGrid-columnHeaderTitle {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.17px;
+    text-transform: uppercase;
+}
+
+.callout {
+    padding: 0.8em 1em;
+    line-height: 1.2;
+    text-align: center;
+    position: relative;
+    clear: both;
+    border-radius: 0 10px 10px 0;
+  }
+  
+  .callout::before {
+    width: 35px;
+    height: 35px;
+    display: inline-flex;
+    justify-content: center;
+    position: absolute;
+    font-size: 1.5em;
+    left: -1.2rem;
+    content: "🙋🏾‍♀️";
+    background-color: #b4aaff;
+    border-radius: 50%;
+    align-items: center;
+    top: -0.8rem;
+  }
+  
+  .callout {
+    background: rgba(224, 226, 255, 0.5);
+    border-left: 4px solid #b4aaff;
+    color: #242424;
+    margin: 1em;
+  }
+  
+  .callout.warning::before {
+    content: "⚠️";
+    background-color: orangered;
+    border-radius: 50%;
+    align-items: center;
+    top: -0.8rem;
+  }
+  
+  .callout.success::before {
+    content: "🎉";
+    background-color: #3cc3c3;
+    border-radius: 50%;
+    align-items: center;
+    top: -0.8rem;
+  }
+  
+  .callout.warning {
+    background-color: #ffe5d9;
+    border-left: 4px solid orangered;
+  }
+  
+  .callout.success {
+    background-color: #edf3ed;
+    border-left: 4px solid #3cc3c3;
+  }
+  
+  .css-12o1o9-MuiAvatar-root-MuiAvatarGroup-avatar{
+    width: 32px;
+    height: 32px;
+  }
+
+  .MuiTypography-h5.MuiCardHeader-title{
+    line-height: 1;
+    font-weight: 500;
+    font-size: 1.25rem;
+    letter-spacing: 0.0125em;
+  }
+
+  .MuiAlert-standardWarning{
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    box-shadow: none;
+    background-image: none;
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    letter-spacing: 0.15px;
+    display: flex;
+    padding: 6px 16px;
+    border-radius: 5px;
+    color: rgb(224, 158, 0);
+    background-color: rgba(255, 180, 0, 0.12);
+  }
+
+  .css-h2qpui {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row wrap;
+    margin-top: 0.5rem;
+    width: calc(100% + 1.5rem);
+    margin-left: -1.5rem;
+}
+
+  .css-h2qpui > .MuiGrid-item {
+    padding-left: 1.5rem;
+}
+
+.css-h2qpui > .MuiGrid-item {
+    padding-top: 1.5rem;
+}

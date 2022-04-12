@@ -14,6 +14,7 @@ import Customization from '../Customization';
 import navigation from '../../../menu-items/index';
 import { drawerWidth } from '../../../store/constant';
 import { SET_MENU } from '../../../store/actions';
+import { useNavigate } from 'react-router-dom';
 
 // assets
 import { IconChevronRight } from '@tabler/icons';
@@ -62,9 +63,15 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
     })
 }));
 
+
+
+
+
 // ==============================|| MAIN LAYOUT ||============================== //
 
 const MainLayout = () => {
+    let navigate = useNavigate();
+
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('lg'));
 
@@ -79,6 +86,15 @@ const MainLayout = () => {
         dispatch({ type: SET_MENU, opened: !matchDownMd });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [matchDownMd]);
+
+    useEffect(() => {
+        const loginData = JSON.parse(window.localStorage.getItem('loginData'));
+        if (loginData === null) {
+            navigate('/');
+        }
+    });
+
+
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -105,7 +121,7 @@ const MainLayout = () => {
             {/* main content */}
             <Main theme={theme} open={leftDrawerOpened}>
                 {/* breadcrumb */}
-                <Breadcrumbs separator={IconChevronRight} navigation={navigation} icon title rightAlign />
+                {/* <Breadcrumbs separator={IconChevronRight} navigation={navigation} icon title rightAlign /> */}
                 <Outlet />
             </Main>
             <Customization />

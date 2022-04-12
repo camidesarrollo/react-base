@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -7,7 +6,6 @@ import {
     Box,
     Button,
     Checkbox,
-    Divider,
     FormControl,
     FormControlLabel,
     FormHelperText,
@@ -18,7 +16,6 @@ import {
     OutlinedInput,
     Stack,
     Typography,
-    useMediaQuery
 } from '@mui/material';
 
 // third party
@@ -33,20 +30,33 @@ import AnimateButton from '../../../ui-component/extended/AnimateButton';
 // import Visibility from '@mui/icons-material/Visibility';
 // import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import Google from '../../../assets/images/icons/social-google.svg';
+// Import service
+import { authenticateUser, getMenu} from "../../../Service/index";
+
+import { useNavigate } from 'react-router-dom';
+
+import Snackbar from "@material-ui/core/Snackbar";
+
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const FirebaseLogin = ({ ...others }) => {
+
+    const loginData = JSON.parse(window.localStorage.getItem('loginData'));
+
+    let navigate = useNavigate();
+    useEffect(() => {
+        if(loginData !== null){
+            navigate('/home');
+        }
+    })
+
+
     const theme = useTheme();
     const scriptedRef = useScriptRef();
-    const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-    const customization = useSelector((state) => state.customization);
     const [checked, setChecked] = useState(true);
-
-    const googleHandler = async () => {
-        console.error('Login');
-    };
 
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => {
@@ -57,83 +67,103 @@ const FirebaseLogin = ({ ...others }) => {
         event.preventDefault();
     };
 
+    const initialState = {
+        email: "",
+        password: "",
+    };
+
+    const [user, setUser] = useState(initialState);
+
+    useEffect(() => {
+        // if (userData.user) {
+        //     navigate('home');
+        // }
+    }, []);
+
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleClick = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    const validateUser = (email, password) => {
+        console.log("entro al validador")
+        authenticateUser(email, password)
+            .then((response) => {
+                const username = response.data.username;
+                const role = response.data.roles[0];
+                const token = response.data.token || 'UnToken'
+                let otroValor = new Object();
+                otroValor.name = role;
+                window.localStorage.setItem("loginData", JSON.stringify({ user: username, token: token, role: role }));
+
+        
+
+                getMenu(otroValor)
+                    .then((response_menu) => {
+                        console.log(response_menu);
+                        window.localStorage.setItem("menuData", JSON.stringify(response_menu.data));
+                        return navigate('home');
+                    })
+                    .catch((error) => {
+                        console.log(error.message);
+                    });
+
+            })
+            .catch((error) => {
+                handleClick();
+                console.log(error.message);
+                // setShow(true);
+                resetLoginForm();
+                // setError("Invalid email and password");
+            });
+    };
+
+    const resetLoginForm = () => {
+        setUser(initialState);
+    };
+
     return (
         <>
             <Grid container direction="column" justifyContent="center" spacing={2}>
-                <Grid item xs={12}>
-                    <AnimateButton>
-                        <Button
-                            disableElevation
-                            fullWidth
-                            onClick={googleHandler}
-                            size="large"
-                            variant="outlined"
-                            sx={{
-                                color: 'grey.700',
-                                backgroundColor: theme.palette.grey[50],
-                                borderColor: theme.palette.grey[100]
-                            }}
-                        >
-                            <Box sx={{ mr: { xs: 1, sm: 2, width: 20 } }}>
-                                <img src={Google} alt="google" width={16} height={16} style={{ marginRight: matchDownSM ? 8 : 16 }} />
-                            </Box>
-                            Sign in with Google
-                        </Button>
-                    </AnimateButton>
-                </Grid>
-                <Grid item xs={12}>
-                    <Box
-                        sx={{
-                            alignItems: 'center',
-                            display: 'flex'
-                        }}
-                    >
-                        <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
-
-                        <Button
-                            variant="outlined"
-                            sx={{
-                                cursor: 'unset',
-                                m: 2,
-                                py: 0.5,
-                                px: 7,
-                                borderColor: `${theme.palette.grey[100]} !important`,
-                                color: `${theme.palette.grey[900]}!important`,
-                                fontWeight: 500,
-                                borderRadius: `${customization.borderRadius}px`
-                            }}
-                            disableRipple
-                            disabled
-                        >
-                            OR
-                        </Button>
-
-                        <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
-                    </Box>
-                </Grid>
                 <Grid item xs={12} container alignItems="center" justifyContent="center">
                     <Box sx={{ mb: 2 }}>
-                        <Typography variant="subtitle1">Sign in with Email address</Typography>
+                        <Typography variant="subtitle1">Acceder con la dirección de correo electrónico</Typography>
                     </Box>
                 </Grid>
             </Grid>
 
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}  anchorOrigin={{  vertical: 'top',
+                horizontal: 'center',}}>
+                <Alert severity="error">
+                    <AlertTitle>Error</AlertTitle>
+                        Se ha presentado un <strong>error de sistema.</strong>. Por Favor intentelo nuevamente.
+                </Alert>
+            </Snackbar>
+
             <Formik
                 initialValues={{
-                    email: 'info@codedthemes.com',
-                    password: '123456',
+                    email: '',
+                    password: '',
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
-                    email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-                    password: Yup.string().max(255).required('Password is required')
+                    email: Yup.string().email('Debe ser un correo electrónico válido').max(255).required('El correo electrónico es obligatorio'),
+                    password: Yup.string().max(255).required('Se requiere una contraseña')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     try {
                         if (scriptedRef.current) {
                             setStatus({ success: true });
                             setSubmitting(false);
+                  
                         }
+                        validateUser(values.email, values.password);
                     } catch (err) {
                         console.error(err);
                         if (scriptedRef.current) {
@@ -147,7 +177,7 @@ const FirebaseLogin = ({ ...others }) => {
                 {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
                     <form noValidate onSubmit={handleSubmit} {...others}>
                         <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
-                            <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-email-login">Email</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-email-login"
                                 type="email"
@@ -155,7 +185,7 @@ const FirebaseLogin = ({ ...others }) => {
                                 name="email"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                label="Email Address / Username"
+                                label="Email"
                                 inputProps={{}}
                             />
                             {touched.email && errors.email && (
@@ -240,6 +270,7 @@ const FirebaseLogin = ({ ...others }) => {
                     </form>
                 )}
             </Formik>
+
         </>
     );
 };
