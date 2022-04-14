@@ -45,7 +45,7 @@ export const getThemeColors = () => [
 
 export const getChipColors = () => {
   const colores = [ 
-    {color: "#CA0000",  backgroundColor: "rgba(204 , 0 , 0, 0.12)"},
+    {color: "#CA0000",  backgroundColor: "rgba(240 , 0 , 0, 0.12)"},
     {color:"#00CC00", backgroundColor: "rgba(0, 240, 0, 0.12)"},
     {color:"#0000CC", backgroundColor: "rgba(0, 0, 240, 0.12)"},
     {color:"#CCCC00", backgroundColor: "rgba(240, 240, 0, 0.12)"},

@@ -142,7 +142,7 @@ const FirebaseLogin = ({ ...others }) => {
                 horizontal: 'center',}}>
                 <Alert severity="error">
                     <AlertTitle>Error</AlertTitle>
-                        Se ha presentado un <strong>error de sistema.</strong>. Por Favor intentelo nuevamente.
+                        Se ha presentado un <strong>error. La contraseña o email que especificaste no es correcta</strong>. Por Favor intentelo nuevamente.
                 </Alert>
             </Snackbar>
 

@@ -17,6 +17,7 @@
     "axios": "^0.26.1",
     "formik": "^2.2.9",
     "framer-motion": "^6.2.8",
+    "lodash": "^4.17.21",
     "material-ui-popup-state": "^2.0.0",
     "mui-datatables": "^3.8.5",
     "prop-types": "^15.8.1",
@@ -33,6 +34,7 @@
     "react-scripts": "5.0.0",
     "sass": "^1.49.9",
     "styled-components": "^5.3.5",
+    "validator": "^13.7.0",
     "yup": "^0.32.11"
   },
   "scripts": {

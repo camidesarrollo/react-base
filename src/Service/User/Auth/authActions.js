@@ -52,11 +52,10 @@ export const logoutUser = () => {
 };
 
 export const deleteUser  = async (id) => {
+  console.log(id);
   try {
-    let url = AUTH_URL + "/eliminarUsuario";
-    const response = await axios.delete(url, {
-     id:id
-    });
+    let url = AUTH_URL + "/eliminarUsuario/" + id;
+    const response = await axios.delete(url);
     
     return Promise.resolve(response);
   } catch (error) {
