@@ -14,14 +14,18 @@ const NavGroup = ({ item }) => {
     const theme = useTheme();
 
     // menu list collapse & items
-
-
-    const items = item.submenu.map((menu) => {
-        
-        if(menu.submenu.length === 2){
-            return <NavCollapse key={menu.menu_id} menu={menu} level={1} />;
-        }else {
-            return <NavItem key={menu.menu_id} item={menu} level={1} />;
+    const items = item.children?.map((menu) => {
+        switch (menu.type) {
+            case 'collapse':
+                return <NavCollapse key={menu.id} menu={menu} level={1} />;
+            case 'item':
+                return <NavItem key={menu.id} item={menu} level={1} />;
+            default:
+                return (
+                    <Typography key={menu.id} variant="h6" color="error" align="center">
+                        Menu Items Error
+                    </Typography>
+                );
         }
     });
 
@@ -29,9 +33,14 @@ const NavGroup = ({ item }) => {
         <>
             <List
                 subheader={
-                    item.menu_title && (
+                    item.title && (
                         <Typography variant="caption" sx={{ ...theme.typography.menuCaption }} display="block" gutterBottom>
-                            {item.menu_title}
+                            {item.title}
+                            {item.caption && (
+                                <Typography variant="caption" sx={{ ...theme.typography.subMenuCaption }} display="block" gutterBottom>
+                                    {item.caption}
+                                </Typography>
+                            )}
                         </Typography>
                     )
                 }

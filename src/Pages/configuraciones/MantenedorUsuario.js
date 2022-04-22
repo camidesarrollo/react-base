@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect, useCallback } from "react";
-import { Snackbar, Alert, AlertTitle, Avatar, Typography, Chip, Dialog, DialogTitle, DialogContentText, DialogContent, DialogActions, Paper, Grid, Button, Box, FormControl, InputLabel, FormHelperText, FormControlLabel, MenuItem, Select, Checkbox, OutlinedInput, FormGroup, Modal } from '@mui/material';
+import { Snackbar, Alert, Avatar, Typography, Chip, Dialog, DialogTitle, DialogContentText, DialogContent, DialogActions, Paper, Grid, Button, Box, FormControl, InputLabel, FormHelperText, FormControlLabel, MenuItem, Select, Checkbox, OutlinedInput, FormGroup, Modal } from '@mui/material';
 import AnimateButton from '../../ui-component/extended/AnimateButton';
 import MuiTypography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
@@ -14,6 +14,7 @@ import debounce from "lodash/debounce";
 import { prettifyRut, checkRut } from "react-rut-formatter";
 import validator from 'validator';
 import { generarContrasena } from '../../utils/generarContresena';
+import {stringAvatar} from '../../utils/Avatar';
 
 function MantenedorUsuario() {
 
@@ -31,15 +32,6 @@ function MantenedorUsuario() {
 
     const [mensaje, setMensaje] = useState("");
 
-    const handleOpen = (id) => {
-        setOpen(true)
-    };
-
-    const handleClose = () => {
-        setTituloModal("");
-        setOpen(false)
-    };
-
     const [openDialog, setOpenDialog] = React.useState(false);
 
     const [DiagRun, setDiagRun] = React.useState("");
@@ -50,6 +42,17 @@ function MantenedorUsuario() {
     const [optionSelectPerfil, setSelectPerfil] = useState([{}]);
 
     const [idEditar, setidEditar] = useState('');
+
+    const [severity, setSeverity] = useState("");
+
+    const handleOpen = (id) => {
+        setOpen(true)
+    };
+
+    const handleClose = () => {
+        setTituloModal("");
+        setOpen(false)
+    };
 
     const handleClickOpen = (run, roles) => {
         setDiagRun(run);
@@ -114,7 +117,7 @@ function MantenedorUsuario() {
 
                 // data.push(otroValor);
                 for (var i = 0; i < response.data.length; i++) {
-                    let otroValor = new Object();
+                    let otroValor = {};
                     otroValor.label = response.data[i].name;
                     otroValor.value = response.data[i].id;
                     data.push(otroValor);
@@ -377,11 +380,19 @@ function MantenedorUsuario() {
 
         registerUser(inputValue)
             .then((response) => {
-                llenarDataTable();
-                limpiarDataUsuario();
-                handleClose();
-                //   cambiarEstadoModal1(!estadoModal1);
-                //   limpiarDataUsuario();
+                if(response.data.code === 200){
+                    handleClose();
+                    handleClick();
+                    setSeverity("success");
+                    setMensaje(response.data.message)
+                    llenarDataTable();
+                    limpiarDataUsuario();
+                }else{
+                    handleClick();
+                    setSeverity("error");
+                    setMensaje(response.data.message)
+                }
+
             })
             .catch((error) => {
                 console.log(error.message);
@@ -389,6 +400,7 @@ function MantenedorUsuario() {
     };
 
     const editarUsuario = () => {
+        
         inputValue.role = [inputValue.perfil];
         if (stateVigencia.vigencia === true) {
             inputValue.vigencia = ['Vigente'];
@@ -401,10 +413,20 @@ function MantenedorUsuario() {
 
         updateUsuario(idEditar, inputValue)
             .then((response) => {
-               
-                llenarDataTable();
-                limpiarDataUsuario();
-                handleClose();
+                if(response.data.code === 200){
+                    handleClose();
+                    handleClick();
+                    setSeverity("success");
+                    setMensaje(response.data.message)
+                    llenarDataTable();
+                    limpiarDataUsuario();
+                
+                }else{
+                    handleClick();
+                    setSeverity("error");
+                    setMensaje(response.data.message)
+                }
+
             })
             .catch((error) => {
                 console.log(error.message);
@@ -415,11 +437,20 @@ function MantenedorUsuario() {
         console.log(idEditar);
         deleteUser(idEditar)
             .then((response) => {
-                handleClick();
-                setMensaje(response.data.message)
-                llenarDataTable();
-                limpiarDataUsuario();
-                handleClickClose();
+                if(response.data.code === 200){
+                    handleClickClose();
+                    handleClick();
+                    setSeverity("success");
+                    setMensaje(response.data.message)
+                    llenarDataTable();
+                    limpiarDataUsuario();
+                  
+                }else{
+                    handleClick();
+                    setSeverity("error");
+                    setMensaje(response.data.message)
+                }
+
             })
             .catch((error) => {
                 console.log(error.message);
@@ -448,7 +479,7 @@ function MantenedorUsuario() {
             headerAlign: "center",
             renderCell: (params) =>
                 <Box className="css-70qvj9">
-                    <Avatar sx={{ fontWeight: 'light', marginRight: "0.75rem", width: "30px", height: "30px", fontSize: "0.875rem" }}>N</Avatar>
+                    <Avatar sx={{ fontWeight: 'light', marginRight: "0.75rem", width: "30px", height: "30px", fontSize: "0.875rem" }} {...stringAvatar(params.row.nombres)} />
                     <Box className="css-p38jk0">
                         <Typography variant="a" sx={{ fontWeight: 600 }}>
                             {params.row.username}
@@ -556,17 +587,7 @@ function MantenedorUsuario() {
     ];
     return (
         <>
-            {/* <Paper className="css-e8p490">
-                <Box sx={{ p: 2 }}>
-                    <Grid container className="css-b09laf">
-                        <Grid item sx={{ paddingTop: 1, paddingLeft: 1 }} >
-                            <MuiTypography variant="h2">
-                                Mantenedor Usuario
-                            </MuiTypography>
-                        </Grid>
-                    </Grid>
-                </Box>
-            </Paper> */}
+
             <Paper className="css-e8p490">
                 <Box sx={{ p: 2 }}>
                     <DataTableGrid columns={columns} rows={rowsData} dataBotonStartIcon={<AddIcon />} onClickBoton={() => { handleOpen(); setTituloModal("Agregar usuario") }} textoBoton="Add usuario"></DataTableGrid>
@@ -777,7 +798,7 @@ function MantenedorUsuario() {
                 vertical: 'top',
                 horizontal: 'center',
             }}>
-                <Alert onClose={handleCloseSnack} severity="success" sx={{ width: '100%' }}>
+                <Alert onClose={handleCloseSnack} severity={severity} sx={{ width: '100%' }}>
                     {mensaje}
                 </Alert>
             </Snackbar>

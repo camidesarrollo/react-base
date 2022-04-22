@@ -22,29 +22,29 @@ const NavItem = ({ item, level }) => {
     const customization = useSelector((state) => state.customization);
     const matchesSM = useMediaQuery(theme.breakpoints.down('lg'));
 
-    const Icon = item.menu_icon;
-    const itemIcon = item?.menu_icon ? (
+    const Icon = item.icon;
+    const itemIcon = item?.icon ? (
         <Icon stroke={1.5} size="1.3rem" />
     ) : (
         <FiberManualRecordIcon
             sx={{
-                width: customization.isOpen.findIndex((id) => id === item?.menu_id) > -1 ? 8 : 6,
-                height: customization.isOpen.findIndex((id) => id === item?.menu_id) > -1 ? 8 : 6
+                width: customization.isOpen.findIndex((id) => id === item?.id) > -1 ? 8 : 6,
+                height: customization.isOpen.findIndex((id) => id === item?.id) > -1 ? 8 : 6
             }}
             fontSize={level > 0 ? 'inherit' : 'medium'}
         />
     );
 
     let itemTarget = '_self';
-    if(item.submenu.length === 0){
+    if (item.target) {
         itemTarget = '_blank';
     }
 
     let listItemProps = {
-        component: forwardRef((props, ref) => <Link ref={ref} {...props} to={`${config.basename}${item.menu_path_response}`} target={itemTarget} />)
+        component: forwardRef((props, ref) => <Link ref={ref} {...props} to={`${config.basename}${item.url}`} target={itemTarget} />)
     };
     if (item?.external) {
-        listItemProps = { component: 'a', href: item.menu_path_response, target: itemTarget };
+        listItemProps = { component: 'a', href: item.url, target: itemTarget };
     }
 
     const itemHandler = (id) => {
@@ -57,9 +57,9 @@ const NavItem = ({ item, level }) => {
         const currentIndex = document.location.pathname
             .toString()
             .split('/')
-            .findIndex((id) => id === item.menu_id);
+            .findIndex((id) => id === item.id);
         if (currentIndex > -1) {
-            dispatch({ type: MENU_OPEN, id: item.menu_id });
+            dispatch({ type: MENU_OPEN, id: item.id });
         }
         // eslint-disable-next-line
     }, []);
@@ -76,15 +76,22 @@ const NavItem = ({ item, level }) => {
                 py: level > 1 ? 1 : 1.25,
                 pl: `${level * 24}px`
             }}
-            selected={customization.isOpen.findIndex((id) => id === item.menu_id) > -1}
-            onClick={() => itemHandler(item.menu_id)}
+            selected={customization.isOpen.findIndex((id) => id === item.id) > -1}
+            onClick={() => itemHandler(item.id)}
         >
             <ListItemIcon sx={{ my: 'auto', minWidth: !item?.icon ? 18 : 36 }}>{itemIcon}</ListItemIcon>
             <ListItemText
                 primary={
-                    <Typography variant={customization.isOpen.findIndex((id) => id === item.menu_id) > -1 ? 'h5' : 'body1'} color="inherit">
-                        {item.menu_title}
+                    <Typography variant={customization.isOpen.findIndex((id) => id === item.id) > -1 ? 'h5' : 'body1'} color="inherit">
+                        {item.title}
                     </Typography>
+                }
+                secondary={
+                    item.caption && (
+                        <Typography variant="caption" sx={{ ...theme.typography.subMenuCaption }} display="block" gutterBottom>
+                            {item.caption}
+                        </Typography>
+                    )
                 }
             />
             {item.chip && (

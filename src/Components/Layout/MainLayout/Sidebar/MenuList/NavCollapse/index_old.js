@@ -24,28 +24,33 @@ const NavCollapse = ({ menu, level }) => {
 
     const handleClick = () => {
         setOpen(!open);
-        setSelected(!selected ? menu.menu_id : null);
+        setSelected(!selected ? menu.id : null);
     };
 
     // menu collapse & item
-    const menus = menu.submenu.map((item) => {
-        if (item.submenu.length > 0) {
-            // item.menu_path =  menu.menu_path + item.menu_path ;
-            return <NavCollapse key={item.menu_id} menu={item} level={level + 1} />;
-        } else {
-            // item.menu_path = menu.menu_path + item.menu_path ;
-            return <NavItem key={item.menu_id} item={item} level={level + 1} />;
+    const menus = menu.children?.map((item) => {
+        switch (item.type) {
+            case 'collapse':
+                return <NavCollapse key={item.id} menu={item} level={level + 1} />;
+            case 'item':
+                return <NavItem key={item.id} item={item} level={level + 1} />;
+            default:
+                return (
+                    <Typography key={item.id} variant="h6" color="error" align="center">
+                        Menu Items Error
+                    </Typography>
+                );
         }
-    })
+    });
 
-    const Icon = menu.menu_icon;
-    const menuIcon = menu.menu_icon ? (
+    const Icon = menu.icon;
+    const menuIcon = menu.icon ? (
         <Icon strokeWidth={1.5} size="1.3rem" style={{ marginTop: 'auto', marginBottom: 'auto' }} />
     ) : (
         <FiberManualRecordIcon
             sx={{
-                width: selected === menu.menu_id ? 8 : 6,
-                height: selected === menu.menu_id ? 8 : 6
+                width: selected === menu.id ? 8 : 6,
+                height: selected === menu.id ? 8 : 6
             }}
             fontSize={level > 0 ? 'inherit' : 'medium'}
         />
@@ -62,15 +67,22 @@ const NavCollapse = ({ menu, level }) => {
                     py: level > 1 ? 1 : 1.25,
                     pl: `${level * 24}px`
                 }}
-                selected={selected === menu.menu_id}
+                selected={selected === menu.id}
                 onClick={handleClick}
             >
-                <ListItemIcon sx={{ my: 'auto', minWidth: !menu.menu_icon ? 18 : 36 }}>{menuIcon}</ListItemIcon>
+                <ListItemIcon sx={{ my: 'auto', minWidth: !menu.icon ? 18 : 36 }}>{menuIcon}</ListItemIcon>
                 <ListItemText
                     primary={
-                        <Typography variant={selected === menu.menu_id ? 'h5' : 'body1'} color="inherit" sx={{ my: 'auto' }}>
-                            {menu.menu_title}
+                        <Typography variant={selected === menu.id ? 'h5' : 'body1'} color="inherit" sx={{ my: 'auto' }}>
+                            {menu.title}
                         </Typography>
+                    }
+                    secondary={
+                        menu.caption && (
+                            <Typography variant="caption" sx={{ ...theme.typography.subMenuCaption }} display="block" gutterBottom>
+                                {menu.caption}
+                            </Typography>
+                        )
                     }
                 />
                 {open ? (

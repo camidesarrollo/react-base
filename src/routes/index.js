@@ -35,11 +35,11 @@ const ThemeRoutes = () => {
                 <Route exact path="/" element={<AuthLogin3 />} />
             </Route>
             <Route element={<MainLayout> <Outlet /> </MainLayout>}>
-                <Route exact path="/home" element={<DashboardDefault />} />
-                <Route exact path="/configuraciones/mantenedor_menu" element={<Mantenedor_Menu />} />
-                <Route exact path="/configuraciones/mantenedor_usuario" element={<MantenedorUsuario />} />
-                <Route exact path="/configuraciones/mantenedor_perfil" element={<MantenedorPerfil/>} />
-                <Route exact path="/configuraciones/perfil" element={<Perfil/>} />
+                <Route exact path="inmobiliaria/home" element={<DashboardDefault />} />
+                <Route exact path="inmobiliaria/configuraciones/mantenedor_menu" element={<Mantenedor_Menu />} />
+                <Route exact path="inmobiliaria/configuraciones/mantenedor_usuario" element={<MantenedorUsuario />} />
+                <Route exact path="inmobiliaria/configuraciones/mantenedor_perfil" element={<MantenedorPerfil/>} />
+                <Route exact path="inmobiliaria/configuraciones/perfil" element={<Perfil/>} />
             </Route>
             {/* <Route exact path="/home" element={<Home />} />
                         <Route exact path="configuraciones/mantenedor_perfil" element={<MantenedorPerfil />} />

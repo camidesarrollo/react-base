@@ -12,6 +12,12 @@ function escapeRegExp(value) {
 }
 
 function QuickSearchToolbar(props) {
+let boton = "";
+  if(props.onClickBoton !== undefined){
+    boton = <Button variant="contained" size="medium" startIcon={props.dataBotonStartIcon} onClick={props.onClickBoton} sx={{ boxShadow: 'rgb(58 53 65 / 42%) 0px 4px 8px -4px', letterSpacing: '0.3px', padding: "0.46875rem 1.375rem", fontSize: "1rem", margin: "0px 1rem 0.5rem 0px" }}>
+    {props.textoBoton}
+  </Button>;
+  }
   return (
 
     <Grid container className="css-1xqoed8" sx={{padding: "1.25rem 1.25rem 0.75rem", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between"}}>
@@ -60,9 +66,7 @@ function QuickSearchToolbar(props) {
         />
 
 
-        <Button variant="contained" size="medium" startIcon={props.dataBotonStartIcon} onClick={props.onClickBoton} sx={{ boxShadow: 'rgb(58 53 65 / 42%) 0px 4px 8px -4px', letterSpacing: '0.3px', padding: "0.46875rem 1.375rem", fontSize: "1rem", margin: "0px 1rem 0.5rem 0px" }}>
-          {props.textoBoton}
-        </Button>
+          {boton}
 
       </Box>
 
@@ -105,6 +109,7 @@ export default function DataTableGrid(props) {
         components={{ Toolbar: QuickSearchToolbar }}
         rows={rows}
         columns={props.columns}
+        getRowId={props.getRowId}
         componentsProps={{
           toolbar: {
             value: searchText,

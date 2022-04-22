@@ -41,3 +41,26 @@ export const editarRole = async (id, role) => {
     return Promise.reject(error);
   }
 };
+
+export const editarRoles = async (role) => {
+  const url = AUTH_URL +"/updateRoles";
+  try {
+    const response = await axios.put(url, role);
+    return Promise.resolve(response);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const deleteRol  = async (id) => {
+
+  try {
+    let url = AUTH_URL + "/eliminarRole/" + id;
+    const response = await axios.delete(url);
+    
+    return Promise.resolve(response);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+

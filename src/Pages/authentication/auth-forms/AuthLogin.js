@@ -49,7 +49,7 @@ const FirebaseLogin = ({ ...others }) => {
     let navigate = useNavigate();
     useEffect(() => {
         if(loginData !== null){
-            navigate('/home');
+            navigate('inmobiliaria/home');
         }
     })
 
@@ -98,17 +98,15 @@ const FirebaseLogin = ({ ...others }) => {
                 const username = response.data.username;
                 const role = response.data.roles[0];
                 const token = response.data.token || 'UnToken'
+                const privilegio = response.data.privilegios;
                 let otroValor = new Object();
                 otroValor.name = role;
-                window.localStorage.setItem("loginData", JSON.stringify({ user: username, token: token, role: role }));
-
-        
-
+                window.localStorage.setItem("loginData", JSON.stringify({ user: username, token: token, role: role, privilegio: privilegio }));
                 getMenu(otroValor)
                     .then((response_menu) => {
                         console.log(response_menu);
                         window.localStorage.setItem("menuData", JSON.stringify(response_menu.data));
-                        return navigate('home');
+                        return navigate('inmobiliaria/home');
                     })
                     .catch((error) => {
                         console.log(error.message);

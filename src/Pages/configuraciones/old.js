@@ -1,18 +1,45 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
-import {
-    Paper, Grid, FormControl, InputLabel, Select, MenuItem, OutlinedInput, Box, Chip, FormGroup, FormControlLabel, Checkbox, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Snackbar, Alert
-} from '@mui/material';
-import MainCard from '../../ui-component/cards/MainCard';
-import TreeMenu from "../../Components/TreeMenu/TreeMenu";
-import { gridSpacing } from '../../store/constant';
-import { getMenuId, getAllMenu, getAllMenuTable, getSubMenuByMenu, eliminarMenu, editarMenu } from "../../Service/index";
-import { getChipColors } from "../../utils/colors";
-import { useTheme } from '@mui/material/styles';
+import DataTableGrid from '../../Components/Layout/Table';
+import { useSelector } from 'react-redux';
 import { getRoles, guardarMenu } from "../../Service/index";
+import {Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,FormGroup, Grid } from '@mui/material';
+import MuiTypography from '@mui/material/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import {
+    Box,
+    Button,
+    Checkbox,
+    Divider,
+    FormControlLabel,
+    FormHelperText,
+    IconButton,
+    InputAdornment,
+    OutlinedInput,
+    Stack,
+    Typography,
+    useMediaQuery, Paper
+} from '@mui/material';
+// project imports
+import SubCard from '../../ui-component/cards/SubCard';
+import MainCard from '../../ui-component/cards/MainCard';
+import SecondaryAction from '../../ui-component/cards/CardSecondaryAction';
+import { gridSpacing } from '../../store/constant';
+import Tree from "../../Components/Tree/Tree";
+import TreeMenu from "../../Components/TreeMenu/TreeMenu"
+
+import useScriptRef from '../../hooks/useScriptRef';
 import AnimateButton from '../../ui-component/extended/AnimateButton';
+import { useTheme } from '@mui/material/styles';
+
+import { getMenuId, getAllMenu, getAllMenuTable, getSubMenuByMenu, eliminarMenu } from "../../Service/index";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import DataTableGrid from '../../Components/Layout/Table';
+
+import { getChipColors } from "../../utils/colors";
+
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -25,6 +52,98 @@ const MenuProps = {
     },
 };
 
+const names = [
+    'Oliver Hansen',
+    'Van Henry',
+    'April Tucker',
+    'Ralph Hubbard',
+    'Omar Alexander',
+    'Carlos Abbott',
+    'Miriam Wagner',
+    'Bradley Wilkerson',
+    'Virginia Andrews',
+    'Kelly Snyder',
+];
+
+const structure = [
+    {
+        type: "folder",
+        name: "client",
+        files: [
+            {
+                type: "folder",
+                name: "ui",
+                files: [
+                    { type: "file", name: "Toggle.js" },
+                    { type: "file", name: "Button.js" },
+                    { type: "file", name: "Button.style.js" }
+                ]
+            },
+            {
+                type: "folder",
+                name: "components",
+                files: [
+                    { type: "file", name: "Tree.js" },
+                    { type: "file", name: "Tree.style.js" }
+                ]
+            },
+            { type: "file", name: "setup.js" },
+            { type: "file", name: "setupTests.js" }
+        ]
+    },
+    {
+        type: "folder",
+        name: "packages",
+        files: [
+            {
+                type: "file",
+                name: "main.js"
+            }
+        ]
+    },
+    { type: "file", name: "index.js" },
+    {
+        type: "folder",
+        name: "packages",
+        files: [
+            {
+                type: "file",
+                name: "main.js"
+            }
+        ]
+    },
+    {
+        type: "folder",
+        name: "packages",
+        files: [
+            {
+                type: "file",
+                name: "main.js"
+            }
+        ]
+    },
+    {
+        type: "folder",
+        name: "packages",
+        files: [
+            {
+                type: "file",
+                name: "main.js"
+            }
+        ]
+    },
+    {
+        type: "folder",
+        name: "packages",
+        files: [
+            {
+                type: "file",
+                name: "main.js"
+            }
+        ]
+    }
+];
+
 function getStyles(name, personName, theme) {
     return {
         fontWeight:
@@ -34,107 +153,33 @@ function getStyles(name, personName, theme) {
     };
 }
 
-const privilegioUsuario = JSON.parse(window.localStorage.getItem('loginData')).privilegio;
-
 
 const Mantenedor_Menu = (props) => {
 
     const theme = useTheme();
-
-    let i = -1;
-    let j = -1;
-
-    const chipColor = getChipColors();
+    const scriptedRef = useScriptRef();
+    const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
+    const customization = useSelector((state) => state.customization);
 
     let [data, setData] = useState([]);
-
-    let [disabledActualizar, setDisabledActualizar] = useState(true);
-
-    let [disabledCrear, setDisabledCrear] = useState(true);
-
-    let dataMenu2 = [{
-        argumentos: "",
-        descripcion: "",
-        menu_icon: "",
-        menu_id: "",
-        menu_path: "",
-        menu_title: "",
-        roles: null,
-        submenu: [],
-        tipo: "",
-        tipo_menu: 0,
-        vigencia: { id: 1, name: 'Vigente' }
-    }];
-
-    const [formulario, setFormulario] = useState({
-        tipo: "-1",
-        tipo_menu: "0",
-        menu_title: "",
-        descripcion: "",
-        formulario: "",
-        argumentos: "",
-        menu_path: "",
-        vigencia: false
-    })
-
-    const [idMenu, setDiagId] = React.useState("");
-
     let [dataTable, setDataTable] = useState([]);
 
 
-
+    const [perfil, setperfil] = useState([]);
     const [perfilSelect, setperfilSelect] = useState([]);
 
-    const [perfil, setperfil] = useState([]);
+    const [personName, setPersonName] = React.useState([]);
 
-    const [subMenu, setSubMenu] = useState(false);
+    const handleChange = (event) => {
+        const {
+            target: { value },
+        } = event;
 
-    const [subMenuData, setSubMenuData] = useState([]);
-
-    const [idEditar, setIdEditar] = useState("");
-
-    const [titleMenu, setDiagTitle] = React.useState("");
-
-    const [openDialog, setOpenDialog] = React.useState(false);
-
-    const [openSnack, setOpenSnack] = useState(false);
-
-    const [mensaje, setMensaje] = useState("");
-
-    const [visibleMenu, setVisibleMenu] = useState(false);
-
-    const [severity, setSeverity] = useState("");
-
-    const handleClickClose = () => {
-        setOpenDialog(false);
+        setperfilSelect(
+            // On autofill we get a stringified value.
+            typeof value === 'string' ? value.split(',') : value,
+        );
     };
-
-    const handleCloseSnack = () => {
-        setOpenSnack(false);
-    }
-
-    const handleOpenSnack = () => {
-        setOpenSnack(true);
-    }
-
-    const [optionSelectPerfil, setSelectPerfil] = useState([{}]);
-
-    const handleClickOpen = (titulo, id) => {
-        setDiagTitle(titulo);
-        setDiagId(id);
-        setOpenDialog(true);
-    };
-
-    const llenarTree = () => {
-        getAllMenu()
-            .then((response) => {
-                dataMenu2 = response.data;
-                setData(response.data);
-            })
-            .catch((error) => {
-                console.log(error.message);
-            });
-    }
 
     const obtenerPerfil = () => {
         getRoles()
@@ -153,20 +198,20 @@ const Mantenedor_Menu = (props) => {
     }
 
 
-    useLayoutEffect(() => {
-        llenarTree();
-        llenarDataTable();
-        obtenerPerfil();
-
-        if (privilegioUsuario.actualizar === true) {
-            setDisabledActualizar(false);
-        }
-
-        if (privilegioUsuario.crear === true) {
-            setDisabledCrear(false);
-        }
-
-    }, []);
+    const handleClick = (node) => {
+        console.log(node);
+    };
+    const handleUpdate = (state) => {
+        localStorage.setItem(
+            "tree",
+            JSON.stringify(state, function (key, value) {
+                if (key === "parentNode" || key === "id") {
+                    return null;
+                }
+                return value;
+            })
+        );
+    };
 
     const handleUpdateTreeMenu = (state) => {
         localStorage.setItem(
@@ -180,132 +225,35 @@ const Mantenedor_Menu = (props) => {
         );
     };
 
-    const handleClick = (node) => {
-        console.log(node);
-    };
+    useLayoutEffect(() => {
+        llenarTree();
+        llenarDataTable();
+        obtenerPerfil();
+    }, []);
 
-    const handleChangeSelect = (event) => {
-
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-        console.log(name);
-
-
-        if (name === "tipo") {
-
-            if (value === "1") {
-                setVisibleMenu(true);
-            } else {
-                setVisibleMenu(false);
-                formulario.tipo_menu = 0;
-            }
-        }
-
-        setFormulario({
-            ...formulario,
-            [name]: value
-        });
-    };
-
-    const handleInputChange = (event) => {
-        if (event.target.name === "menu_title") {
-            generarPath(event.target.value);
-        }
-        setFormulario({
-            ...formulario,
-            [event.target.name]: event.target.value
-        })
-    }
-
-    const generarPath = (titulo) => {
-        let menu_title = titulo.toLowerCase();
-        let result = menu_title.indexOf(" ");
-        let resultado = "";
-
-        if (result > 0) {
-            resultado = "/" + menu_title.replace(" ", "_");
-        } else {
-            resultado = "/" + menu_title;
-        }
-
-        formulario.menu_path = resultado;
-    }
-
-    const handleChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-
-        setperfilSelect(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
-    };
-
-    const handleMenuRename = (id, type) => {
-
-        getMenuId(id)
+    let dataMenu2 = [{
+        argumentos: "",
+        descripcion: "",
+        menu_icon: "",
+        menu_id: "",
+        menu_path: "",
+        menu_title: "",
+        roles: null,
+        submenu: [],
+        tipo: "",
+        tipo_menu: 0,
+        vigencia: { id: 1, name: 'Vigente' }
+    }];
+    const llenarTree = () => {
+        getAllMenu()
             .then((response) => {
-                limpiarData();
-                setIdEditar(id);
-                console.log(response);
-
-                let vigencia = false;
-                if (response.data.vigencia.id === 1) {
-                    vigencia = true;
-                }
-
-                let tipo_menu = "";
-                let tipo = "-1";
-
-                if (response.data.padre != null) {
-                    tipo_menu = response.data.padre.menu_id;
-                    tipo = 1;
-                    setVisibleMenu(true);
-                } else {
-                    tipo = 0;
-                    setVisibleMenu(false);
-                }
-
-                if (response.data.submenu.length > 0) {
-                    setSubMenu(true);
-                    setSubMenuData(response.data.submenu);
-
-                } else {
-                    setSubMenu(false);
-                }
-                setFormulario({ menu_title: response.data.menu_title, tipo_menu: tipo_menu, descripcion: response.data.descripcion, menu_path: response.data.menu_path, argumentos: response.data.argumentos, tipo: tipo, vigencia: vigencia })
-
-
-                let dataSelect = []
-                for (var i = 0; i < response.data.roles.length; i++) {
-                    var role = response.data.roles[i];
-                    dataSelect.push(role.name)
-                }
-                console.log(dataSelect);
-                setperfilSelect(
-                    // On autofill we get a stringified value.
-                    typeof dataSelect === 'string' ? dataSelect.split(',') : dataSelect,
-                );
+                dataMenu2 = response.data;
+                setData(response.data);
             })
             .catch((error) => {
                 console.log(error.message);
             });
-
-
-    };
-
-    const handleChangeVigencia = (event) => {
-
-        const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-        const name = event.target.name;
-
-        setFormulario({
-            ...formulario,
-            [name]: value
-        });
-    };
+    }
 
     const llenarDataTable = () => {
         getAllMenuTable()
@@ -317,116 +265,9 @@ const Mantenedor_Menu = (props) => {
             });
     }
 
-    const editar = () => {
-        if (formulario.vigencia === true) {
-            formulario.vigencia = ['Vigente'];
-        } else {
-            formulario.vigencia = ['No vigente'];
-
-        }
-        formulario.role = perfilSelect;
-        formulario.menu_id = idEditar;
-        console.log(formulario);
-        editarMenu(formulario)
-            .then((response) => {
-                if (response.data.code === 200) {
-                    setMensaje(response.data.message);
-                    llenarTree();
-                    handleOpenSnack();
-                    llenarDataTable();
-                    limpiarData();
-                    setSeverity("success");
-                } else {
-                    setMensaje(response.data.message);
-                    setSeverity("error");
-                    handleOpenSnack();
-                }
-            })
-            .catch((error) => {
-                console.log(error.message);
-            });
-    }
-
-    const guardar = () => {
-
-        if (formulario.vigencia === true) {
-            formulario.vigencia = ['Vigente'];
-        } else {
-            formulario.vigencia = ['No vigente'];
-
-        }
-        formulario.role = perfilSelect;
-
-        guardarMenu(formulario).then((response) => {
-
-            if (response.data.code === 200) {
-                setSeverity("success");
-                setMensaje(response.data.message);
-                llenarTree();
-                handleOpenSnack();
-                llenarDataTable();
-                limpiarData();
-            } else {
-                setMensaje(response.data.message);
-                setSeverity("error");
-                handleOpenSnack();
-            }
-
-
-
-        }).catch((error) => {
-            console.log(error.message);
-        });
-        console.log(formulario);
-    }
-
-
-    const limpiarData = () => {
-        // formik.resetForm({
-        //     values: { menu_title: "", descripcion: "", url: "", argumentos: "", tipo: "", vigencia: false }
-        // });
-        setFormulario({
-            tipo: "-1",
-            tipo_menu: "-1",
-            menu_title: "",
-            descripcion: "",
-            formulario: "",
-            argumentos: "",
-            menu_path: "",
-            vigencia: false
-        })
-        setIdEditar("");
-        setperfilSelect([]);
-        setSubMenu(false);
-        setSubMenuData([]);
-    }
-
-    const handleClickEliminarMenu = (id) => {
-        console.log(id);
-        eliminarMenu(id)
-            .then((response) => {
-
-                if (response.data.code === 200) {
-                    handleClickClose();
-                    setMensaje(response.data.message);
-                    llenarTree();
-                    handleOpenSnack();
-                    llenarDataTable();
-                    limpiarData();
-                    setSeverity("success");
-                } else {
-                    setMensaje(response.data.message);
-                    setSeverity("error");
-                    handleOpenSnack();
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                handleClickClose();
-                alert("No es posible eliminar menu, debido a que contiene SUBMENUS ASOCIADOS");
-            });
-    }
-
+    const [subMenu, setSubMenu] = useState(false);
+    const [subMenuData, setSubMenuData] = useState([]);
+    const [idEditar, setIdEditar] = useState([]);
 
     const columns = [
         {
@@ -531,29 +372,254 @@ const Mantenedor_Menu = (props) => {
             flex: 1,
             align: "center",
             headerAlign: "center",
-            renderCell: (params) => {
-                let disabledActualizar = true;
-                if (privilegioUsuario.actualizar === true) {
-                    disabledActualizar = false;
-                }
-                return <div >
-                    <Button variant="outlined" startIcon={<EditIcon />} onClick={() => { handleMenuRename(params.row.menu_id); }} sx={{ marginRight: '5px' }} disabled={disabledActualizar} />
-                    <Button variant="outlined" color="error" onClick={() => { handleClickOpen(params.row.menu_title, params.row.menu_id) }} startIcon={<DeleteIcon />} disabled={disabledActualizar} />
+            renderCell: (params) => (
+
+                <div >
+                    <Button variant="outlined" startIcon={<EditIcon />} onClick={() => { handleMenuRename(params.row.menu_id); }} sx={{ marginRight: '5px' }} />
+                    <Button variant="outlined" color="error" onClick={() => { handleClickOpen(params.row.menu_title, params.row.menu_id) }} startIcon={<DeleteIcon />} />
                 </div>
-            }
+            )
         },
     ];
 
+    const [openDialog, setOpenDialog] = React.useState(false);
 
+    const handleClickClose = () => {
+        setOpenDialog(false);
+    };
+
+    const [titleMenu, setDiagTitle] = React.useState("");
+    const [idMenu, setDiagId] = React.useState("");
+
+    const handleClickOpen = (titulo, id) => {
+        setDiagTitle(titulo);
+        setDiagId(id);
+        setOpenDialog(true);
+    };
+
+    const [open, setOpen] = React.useState(true);
+
+    const [dataToastr, setDataToastr] = useState({
+        setOpen: false,
+        title: "",
+        data: "",
+        severity: ""
+    });
+    const handleClickEliminarMenu = (id) => {
+        console.log(id);
+        eliminarMenu(id)
+            .then((response) => {
+                if (response.status === 200) {
+                    // let data = {
+                    //     setOpen: true,
+                    //     title: "Success",
+                    //     data: response.data,
+                    //     severity: "succes"
+                    // }
+                    // setDataToastr(data)
+                    handleClickClose();
+                    alert(response.data);
+                    llenarTree();
+                    llenarDataTable();
+
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                // let data = {setOpen: true,
+                //     title: "Warning",
+                //     data: "No es posible eliminar menu, debido a que contiene SUBMENUS ASOCIADOS",
+                //     severity: "warning"}
+                //     setDataToastr(data);
+                handleClickClose();
+                alert("No es posible eliminar menu, debido a que contiene SUBMENUS ASOCIADOS");
+            });
+    }
+
+    const chipColor = getChipColors();
+
+    let i = -1;
+    let j = -1;
+
+    const limpiarData = () => {
+        // formik.resetForm({
+        //     values: { menu_title: "", descripcion: "", url: "", argumentos: "", tipo: "", vigencia: false }
+        // });
+        setFormulario({
+            tipo: "-1",
+            tipo_menu: "-1",
+            menu_title: "",
+            descripcion: "",
+            formulario: "",
+            argumentos: "",
+            menu_path: "",
+            vigencia: false
+        })
+        setIdEditar("");
+        setperfilSelect([]);
+        setSubMenu(false);
+        setSubMenuData([]);
+    }
+
+
+    const [formulario, setFormulario] = useState({
+        tipo: "-1",
+        tipo_menu: "-1",
+        menu_title: "",
+        descripcion: "",
+        formulario: "",
+        argumentos: "",
+        menu_path: "",
+        vigencia: false
+    })
+
+    const handleChangeSelect = (event) => {
+     
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        console.log(name);
+        setFormulario({
+            ...formulario,
+            [name]: value
+        });
+    };
+    const handleChangeVigencia = (event) => {
+
+        const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+        const name = event.target.name;
+
+        setFormulario({ ...formulario,
+            [name]: value });
+    };
+
+    useEffect(() => {
+        const timeOutId = setTimeout(() => setFormulario(formulario), 500);
+        return () => clearTimeout(timeOutId);
+      }, [formulario]);
+
+    const editarMenu = () => {
+        console.log(formulario)
+    }
+
+    const handleMenuRename = (id, type) => {
+        getMenuId(id)
+            .then((response) => {
+
+                getSubMenuByMenu(id)
+                    .then((response_menu) => {
+                        if (response_menu.data.length > 0) {
+                            setSubMenu(true);
+                            setSubMenuData(response_menu.data);
+
+                        } else {
+                            console.log("entramos aca");
+                            setSubMenu(false);
+                            setSubMenuData([]);
+                        }
+
+                        let dataSelect = []
+                        for (var i = 0; i < response.data.roles.length; i++) {
+                            var role = response.data.roles[i];
+                            dataSelect.push(role.name)
+                        }
+                        setperfilSelect(
+                            // On autofill we get a stringified value.
+                            typeof dataSelect === 'string' ? dataSelect.split(',') : dataSelect,
+                        );
+                        let vigencia = false;
+
+                        if (response.data.vigencia.id == 1) {
+                            vigencia = true;
+                        }
+
+                        setIdEditar(response.data.menu_id);
+                        if (response_menu.data.length === 0) {
+                            setFormulario({ menu_title: response.data.menu_title, descripcion: response.data.descripcion, menu_path: response.data.menu_path, argumentos: response.data.argumentos, tipo: "1", vigencia: vigencia })
+                        } else {
+                            setFormulario({ menu_title: response.data.menu_title, descripcion: response.data.descripcion, menu_path: response.data.menu_path, argumentos: response.data.argumentos, tipo: "0", vigencia: vigencia })
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error.message);
+                    });
+
+
+
+
+            })
+            .catch((error) => {
+                console.log(error.message);
+            });
+        // setIsOpen(true);
+        // setEditing(true); 
+
+    };
+
+    const handleInputChange = (event) => {
+        // console.log(event.target.name)
+        // console.log(event.target.value)
+        setFormulario({
+            ...formulario,
+            [event.target.name]: event.target.value
+        })
+    }
+
+    const guardar = () => {
+    
+        if(formulario.vigencia  === true){
+            formulario.vigencia  = ['Vigente'];
+        }else{
+            formulario.vigencia = ['No vigente'];
+            
+        }
+        formulario.role = perfilSelect; 
+        console.log(formulario); 
+        guardarMenu(formulario).then((response) => {
+
+          console.log(response);
+        }).catch((error) => {
+            console.log(error.message);
+        });
+        console.log(formulario);
+    }
+
+    const editar = () => {
+        if(formulario.vigencia  === true){
+            formulario.vigencia  = ['Vigente'];
+        }else{
+            formulario.vigencia = ['No vigente'];
+            
+        }
+        formulario.role = perfilSelect; 
+        formulario.id_menu = idMenu; 
+        editarMenu(formulario).then((response) => {
+
+            console.log(response);
+          }).catch((error) => {
+              console.log(error.message);
+          });
+    }
     return (
         <>
             <Paper className="css-e8p490">
+                <Box sx={{ p: 2 }}>
+                    <Grid container className="css-b09laf">
+                        <Grid item sx={{ paddingTop: 1, paddingLeft: 1 }} >
+                            <MuiTypography variant="h2">
+                                Mantenedor Menu
+                            </MuiTypography>
+                        </Grid>
+                    </Grid>
+                </Box>
+            </Paper>
+            <Paper sx={{ background: "none", border: "none" }}>
                 <Grid container spacing={gridSpacing}>
                     <Grid item xs={12} sm={6}>
                         <MainCard title="Opciones">
                             <Grid container direction="column" spacing={1}>
                                 {/* <Tree data={dataMenu2} onUpdate={handleUpdate} onNodeClick={handleClick} handleMenuRename={handleMenuRename} /> */}
-                                <TreeMenu data={data} onUpdate={handleUpdateTreeMenu} onNodeClick={handleClick} />
+                                <TreeMenu data={data} onUpdate={handleUpdateTreeMenu} onNodeClick={handleClick} handleMenuRename={handleMenuRename} />
                                 {/* <Tree data={data}  onUpdate={handleUpdate} onNodeClick={handleClick} /> */}
                             </Grid>
                         </MainCard>
@@ -587,14 +653,14 @@ const Mantenedor_Menu = (props) => {
 
                                             </Select>
                                         </FormControl>
-                                        {visibleMenu === true &&
+                                        {formulario.tipo === "1" && idMenu === "" &&
                                             <FormControl fullWidth sx={{ m: 1, width: 700 }}>
                                                 <InputLabel id="demo-simple-select-label">Menu</InputLabel>
                                                 <Select
                                                     labelId="demo-simple-select-label"
                                                     id="demo-simple-select"
                                                     value={formulario.tipo_menu}
-                                                    label=""
+                                                    label="tipo_menu"
                                                     onChange={handleChangeSelect}
                                                     name="tipo_menu"
                                                 >
@@ -639,7 +705,6 @@ const Mantenedor_Menu = (props) => {
                                                 name="menu_path"
                                                 label="Url"
                                                 onChange={handleInputChange}
-                                                disabled={true}
                                             />
                                         </FormControl>
                                         <FormControl fullWidth sx={{ m: 1, width: 700 }}>
@@ -688,34 +753,32 @@ const Mantenedor_Menu = (props) => {
                                                 ))}
                                             </Select>
                                         </FormControl>
-                                        <Box>
-                                            {subMenu ? (
-                                                "SubMenus: "
-                                            ) : (
-                                                ""
-                                            )}
-                                            {
+                                        {subMenu ? (
+                                            "SubMenus: "
+                                        ) : (
+                                            ""
+                                        )}
+                                        {
 
-                                                subMenuData.map((item, index) => {
-                                                    if (i >= chipColor.length - 1) {
-                                                        i = 0;
-                                                    } else {
-                                                        i++;
-                                                    }
-                                                    return <Chip key={index} label={item.menu_title} onClick={() => { handleMenuRename(item.menu_id); }} variant="filled" size="small" skin="light" className="css-1kb0wuq" sx={{ color: chipColor[i].color, backgroundColor: chipColor[i].backgroundColor }} />;
+                                            subMenuData.map((item, index) => {
+                                                if (i >= chipColor.length - 1) {
+                                                    i = 0;
+                                                } else {
+                                                    i++;
+                                                }
+                                                return <Chip key={index} label={item.menu_title} onClick={() => { handleMenuRename(item.menu_id); }} variant="filled" size="small" skin="light" className="css-1kb0wuq" sx={{ color: chipColor[i].color, backgroundColor: chipColor[i].backgroundColor }} />;
 
-                                                })
+                                            })
 
-                                            }
-                                        </Box>
+                                        }
                                         <FormGroup>
                                             <FormControlLabel control={<Checkbox checked={formulario.vigencia} onChange={handleChangeVigencia} />} label="Vigencia" name="vigencia" />
                                         </FormGroup>
                                         <Box sx={{ textAlign: "center", alignItems: "center", display: "flex", justifyContent: "center" }}>
                                             {
-                                                idEditar !== "" ? (<AnimateButton><Button className="fill " onClick={() => { editar(); }} disabled={disabledActualizar}>Ediar</Button></AnimateButton>)
+                                                idEditar != "" ? (<AnimateButton><Button className="fill " onClick={() => { editar(); }}>Ediar</Button></AnimateButton>)
                                                     :
-                                                    (<AnimateButton><Button className="fill" onClick={() => { guardar(); }} disabled={disabledCrear}>Agregar</Button></AnimateButton>)
+                                                    (<AnimateButton><Button className="fill"  onClick={() => { guardar(); }}>Agregar</Button></AnimateButton>)
                                             }
                                             <AnimateButton><Button className="fill" onClick={() => { limpiarData(); }}>Limpiar Data</Button></AnimateButton>
 
@@ -728,8 +791,9 @@ const Mantenedor_Menu = (props) => {
 
                         </MainCard>
                     </Grid>
-                </Grid>
-            </Paper>
+
+                </Grid >
+            </Paper >
             <Paper className="css-e8p490" sx={{ marginTop: "20px" }}>
                 <Box sx={{ p: 2 }}>
                     <Grid container className="css-1xqoed8" >
@@ -759,20 +823,16 @@ const Mantenedor_Menu = (props) => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions sx={{ textAlign: "center", alignItems: "center", display: "block", justifyContent: "center" }}>
-
                     <Button variant="contained" onClick={handleClickClose}>Cancelar</Button>
                     <Button variant="contained" color="error" onClick={() => { handleClickEliminarMenu(idMenu) }} endIcon={<DeleteIcon />} autoFocus>Eliminar menu</Button>
                 </DialogActions>
             </Dialog>
-            <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack} anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'center',
-            }}>
-                <Alert onClose={handleCloseSnack} severity={severity} sx={{ width: '100%' }}>
-                    {mensaje}
-                </Alert>
-            </Snackbar>
+            {/* <AlertToastr  setOpen={dataToastr.setOpen} severity={dataToastr.severity} title={dataToastr.title} data ={dataToastr.data} /> */}
         </>
+
     )
+
 }
+
 export default Mantenedor_Menu;
+
