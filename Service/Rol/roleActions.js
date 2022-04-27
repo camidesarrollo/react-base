@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const AUTH_URL = "http://localhost:8082/api/role";
+const AUTH_URL = "http://localhost:8080/api/role";
 
 export const getRoles = async () => {
     const url = AUTH_URL +"/getRoles";

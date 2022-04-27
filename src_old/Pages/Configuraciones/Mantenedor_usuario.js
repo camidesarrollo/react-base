@@ -302,8 +302,8 @@ function MantenedorUsuario() {
           setChecked(false);
         }
         let objet_perfil = new Object();
-        objet_perfil.value = response.data.roles[0].id;
-        objet_perfil.label = response.data.roles[0].name;
+        objet_perfil.value = response.data.roles.id;
+        objet_perfil.label = response.data.roles.name;
         setState({ value: objet_perfil })
 
       })

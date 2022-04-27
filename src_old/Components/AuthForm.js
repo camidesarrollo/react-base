@@ -61,7 +61,7 @@ const { handleLogin, userData } = UserContext(UserContext);
 //     authenticateUser(user.email, user.password)
 //         .then((response) => {
 //             const username = response.data.username;
-//             const role = response.data.roles[0];
+//             const role = response.data.roles;
 //             const token = response.data.token || 'UnToken'
 //             let otroValor = new Object();
 //             otroValor.name = role;

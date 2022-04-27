@@ -31,7 +31,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import {stringAvatar} from '../../utils/Avatar';
 
-const privilegioUsuario = JSON.parse(window.localStorage.getItem('loginData')).privilegio;
+const privilegioUsuario = JSON.parse(window.localStorage.getItem('loginData'));
 
 function MantenedorPerfil() {
 
@@ -336,15 +336,19 @@ function MantenedorPerfil() {
             })
     }
 
+    const privilegioUsuario = JSON.parse(window.localStorage.getItem('loginData'));
+    
     useEffect(() => {
         obtenerPerfil();
         llenarDataTable();
 
-        if (privilegioUsuario.actualizar === true) {
+
+
+        if (privilegioUsuario.privilegio.actualizar === true) {
             setDisabledActualizar(false);
         }
 
-        if (privilegioUsuario.crear === true) {
+        if (privilegioUsuario.privilegio.crear === true) {
             setDisabledCrear(false);
         }
 
@@ -352,9 +356,13 @@ function MantenedorPerfil() {
 
     useEffect(() =>{
         Object.keys(data).filter((key, index) => index < 5).map((valor, key) => {
-            console.log(data[key]);
+            console.log(data[key].usuarios);
                 Object.keys(data[key].usuarios).filter((key_2, index_2) => index_2 < 5).map((valor_2, key_2) => {
-                    console.log(data[key].usuarios[key_2].nombres);
+                    console.log(data[key].usuarios);
+                    // if(data[key].usuarios[key_2].length > 0){
+                    //     console.log(data[key].usuarios[key_2].nombres);
+                    // }
+
                 })
 
         });
@@ -430,12 +438,12 @@ function MantenedorPerfil() {
             align: "center",
             headerAlign: "center",
             renderCell: (params) => (
-                params.value[0].name === 'Administrador' ?
+                params.value.name === 'Administrador' ?
 
                     <Box>
                         <RiAdminFill className="css-zjx26z" />
                         <Typography variant="p" className="css-x6zmnr">
-                            {params.value[0].name}
+                            {params.value.name}
                         </Typography>
                     </Box>
 
@@ -443,7 +451,7 @@ function MantenedorPerfil() {
                     <Box>
                         <RiAdminFill className="css-zjx26z" />
                         <Typography variant="p" className="css-x6zmnr">
-                            {params.value[0].name}
+                            {params.value.name}
                         </Typography>
                     </Box>
             )
@@ -619,11 +627,11 @@ function MantenedorPerfil() {
                                             Total {data[key].usuarios.length} usuarios
                                         </MuiTypography>
                                         <AvatarGroup max={4}>
-                                            {
+                                            {/* {
                                                 Object.keys(data[key].usuarios).filter((key, index_2) => index_2 < 5).map((valor, key_2) => {
                                                     return <Avatar {...stringAvatar(data[key].usuarios[key_2].nombres)} sx={{ width: "32px", height: "32px" }} />
                                                 })
-                                            }
+                                            } */}
                                         </AvatarGroup>
                                     </Box>
                                     <Box>

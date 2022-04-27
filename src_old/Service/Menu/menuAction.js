@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const AUTH_URL = "http://localhost:8082/api/menu";
+const AUTH_URL = "http://localhost:8080/api/menu";
 
 export const getMenu = async (role) => {
   

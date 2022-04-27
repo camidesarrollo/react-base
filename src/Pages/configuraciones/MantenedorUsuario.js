@@ -52,6 +52,7 @@ function MantenedorUsuario() {
     const handleClose = () => {
         setTituloModal("");
         setOpen(false)
+        limpiarDataUsuario();
     };
 
     const handleClickOpen = (run, roles) => {
@@ -137,6 +138,8 @@ function MantenedorUsuario() {
             .then((response) => {
 
                 setidEditar(id);
+                
+                setDisabledInput(true); 
 
                 let data = response.data;
 
@@ -180,8 +183,8 @@ function MantenedorUsuario() {
                 perfil: 0
             }
         });
-        setInputValue(inputValue);
         setStateVigencia({ vigencia: false });
+        setDisabledInput(false); 
     }
 
     useEffect(() => {
@@ -378,19 +381,21 @@ function MantenedorUsuario() {
         inputValue.rut = inputValue.run.split(".").join("").split("-")[0];
         inputValue.dv = inputValue.run.split(".").join("").split("-")[1];
 
+        console.log(inputValue);
         registerUser(inputValue)
             .then((response) => {
-                if(response.data.code === 200){
+                if(response.code === 200){
+                    limpiarDataUsuario();
                     handleClose();
                     handleClick();
                     setSeverity("success");
-                    setMensaje(response.data.message)
+                    setMensaje(response.message)
                     llenarDataTable();
-                    limpiarDataUsuario();
+
                 }else{
                     handleClick();
                     setSeverity("error");
-                    setMensaje(response.data.message)
+                    setMensaje(response.message)
                 }
 
             })
@@ -585,6 +590,8 @@ function MantenedorUsuario() {
             )
         },
     ];
+
+    const [disableInput, setDisabledInput] = useState("");
     return (
         <>
 

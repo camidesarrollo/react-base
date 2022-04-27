@@ -96,7 +96,7 @@ const FirebaseLogin = ({ ...others }) => {
         authenticateUser(email, password)
             .then((response) => {
                 const username = response.data.username;
-                const role = response.data.roles[0];
+                const role = response.data.roles;
                 const token = response.data.token || 'UnToken'
                 const privilegio = response.data.privilegios;
                 let otroValor = new Object();

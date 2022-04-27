@@ -34,7 +34,7 @@ function getStyles(name, personName, theme) {
     };
 }
 
-const privilegioUsuario = JSON.parse(window.localStorage.getItem('loginData')).privilegio;
+
 
 
 const Mantenedor_Menu = (props) => {
@@ -152,17 +152,17 @@ const Mantenedor_Menu = (props) => {
             })
     }
 
+    const privilegioUsuario = JSON.parse(window.localStorage.getItem('loginData'));
 
     useLayoutEffect(() => {
         llenarTree();
         llenarDataTable();
         obtenerPerfil();
-
-        if (privilegioUsuario.actualizar === true) {
+        if (privilegioUsuario.privilegio.actualizar === true) {
             setDisabledActualizar(false);
         }
 
-        if (privilegioUsuario.crear === true) {
+        if (privilegioUsuario.privilegio.crear === true) {
             setDisabledCrear(false);
         }
 
@@ -327,6 +327,12 @@ const Mantenedor_Menu = (props) => {
         formulario.role = perfilSelect;
         formulario.menu_id = idEditar;
         console.log(formulario);
+
+        if(formulario.tipo_menu === ""){
+            formulario.tipo_menu = formulario.tipo;
+        }
+        
+
         editarMenu(formulario)
             .then((response) => {
                 if (response.data.code === 200) {
@@ -533,7 +539,7 @@ const Mantenedor_Menu = (props) => {
             headerAlign: "center",
             renderCell: (params) => {
                 let disabledActualizar = true;
-                if (privilegioUsuario.actualizar === true) {
+                if (privilegioUsuario.privilegio.actualizar === true) {
                     disabledActualizar = false;
                 }
                 return <div >
