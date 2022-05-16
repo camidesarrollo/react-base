@@ -52,20 +52,6 @@ const Mantenedor_Menu = (props) => {
 
     let [disabledCrear, setDisabledCrear] = useState(true);
 
-    let dataMenu2 = [{
-        argumentos: "",
-        descripcion: "",
-        menu_icon: "",
-        menu_id: "",
-        menu_path: "",
-        menu_title: "",
-        roles: null,
-        submenu: [],
-        tipo: "",
-        tipo_menu: 0,
-        vigencia: { id: 1, name: 'Vigente' }
-    }];
-
     const [formulario, setFormulario] = useState({
         tipo: "-1",
         tipo_menu: "0",
@@ -128,7 +114,6 @@ const Mantenedor_Menu = (props) => {
     const llenarTree = () => {
         getAllMenu()
             .then((response) => {
-                dataMenu2 = response.data;
                 setData(response.data);
             })
             .catch((error) => {
@@ -249,7 +234,6 @@ const Mantenedor_Menu = (props) => {
             .then((response) => {
                 limpiarData();
                 setIdEditar(id);
-                console.log(response);
 
                 let vigencia = false;
                 if (response.data.vigencia.id === 1) {
@@ -283,7 +267,6 @@ const Mantenedor_Menu = (props) => {
                     var role = response.data.roles[i];
                     dataSelect.push(role.name)
                 }
-                console.log(dataSelect);
                 setperfilSelect(
                     // On autofill we get a stringified value.
                     typeof dataSelect === 'string' ? dataSelect.split(',') : dataSelect,
@@ -443,13 +426,6 @@ const Mantenedor_Menu = (props) => {
             headerAlign: "center"
         },
         {
-            field: 'menu_icon',
-            headerName: 'Icono',
-            flex: 1,
-            align: "center",
-            headerAlign: "center"
-        },
-        {
             field: 'descripcion',
             headerName: 'Descripción',
             flex: 1,
@@ -459,13 +435,6 @@ const Mantenedor_Menu = (props) => {
         {
             field: 'menu_path',
             headerName: 'URL',
-            flex: 1,
-            align: "center",
-            headerAlign: "center"
-        },
-        {
-            field: 'argumentos',
-            headerName: 'Argumentos',
             flex: 1,
             align: "center",
             headerAlign: "center"
@@ -558,9 +527,7 @@ const Mantenedor_Menu = (props) => {
                     <Grid item xs={12} sm={6}>
                         <MainCard title="Opciones">
                             <Grid container direction="column" spacing={1}>
-                                {/* <Tree data={dataMenu2} onUpdate={handleUpdate} onNodeClick={handleClick} handleMenuRename={handleMenuRename} /> */}
                                 <TreeMenu data={data} onUpdate={handleUpdateTreeMenu} onNodeClick={handleClick} />
-                                {/* <Tree data={data}  onUpdate={handleUpdate} onNodeClick={handleClick} /> */}
                             </Grid>
                         </MainCard>
                     </Grid>
@@ -577,7 +544,7 @@ const Mantenedor_Menu = (props) => {
                                 <Grid container direction="column" spacing={1}>
 
                                     <form>
-                                        <FormControl fullWidth sx={{ m: 1, width: 700 }}>
+                                        <FormControl fullWidth sx={{ m: 1, width: 500 }}>
                                             <InputLabel id="demo-simple-select-label">Tipo</InputLabel>
                                             <Select
                                                 labelId="demo-simple-select-label"
@@ -594,7 +561,7 @@ const Mantenedor_Menu = (props) => {
                                             </Select>
                                         </FormControl>
                                         {visibleMenu === true &&
-                                            <FormControl fullWidth sx={{ m: 1, width: 700 }}>
+                                            <FormControl fullWidth sx={{ m: 1, width: 500 }}>
                                                 <InputLabel id="demo-simple-select-label">Menu</InputLabel>
                                                 <Select
                                                     labelId="demo-simple-select-label"
@@ -613,7 +580,7 @@ const Mantenedor_Menu = (props) => {
                                                 </Select>
                                             </FormControl>
                                         }
-                                        <FormControl fullWidth sx={{ m: 1, width: 700 }}>
+                                        <FormControl fullWidth sx={{ m: 1, width: 500 }}>
                                             <InputLabel htmlFor="outlined-adornment-title-menu">Titulo</InputLabel>
                                             <OutlinedInput
                                                 id="outlined-adornment-title-menu"
@@ -625,7 +592,7 @@ const Mantenedor_Menu = (props) => {
                                             />
                                         </FormControl>
 
-                                        <FormControl fullWidth sx={{ m: 1, width: 700 }}>
+                                        <FormControl fullWidth sx={{ m: 1, width: 500 }}>
                                             <InputLabel htmlFor="outlined-adornment-email-login">Descripción</InputLabel>
                                             <OutlinedInput
                                                 id="outlined-adornment-email-login"
@@ -636,7 +603,7 @@ const Mantenedor_Menu = (props) => {
                                                 onChange={handleInputChange}
                                             />
                                         </FormControl>
-                                        <FormControl fullWidth sx={{ m: 1, width: 700 }}>
+                                        <FormControl fullWidth sx={{ m: 1, width: 500 }}>
                                             <InputLabel htmlFor="outlined-adornment-email-login">Url</InputLabel>
                                             <OutlinedInput
                                                 id="outlined-adornment-email-login"
@@ -648,19 +615,7 @@ const Mantenedor_Menu = (props) => {
                                                 disabled={true}
                                             />
                                         </FormControl>
-                                        <FormControl fullWidth sx={{ m: 1, width: 700 }}>
-                                            <InputLabel htmlFor="outlined-adornment-email-login">Argumentos</InputLabel>
-                                            <OutlinedInput
-                                                id="outlined-adornment-email-login"
-                                                type="text"
-                                                value={formulario.argumentos}
-                                                name="argumentos"
-                                                label="Argumentos"
-                                                onChange={handleInputChange}
-                                            />
-
-                                        </FormControl>
-                                        <FormControl sx={{ m: 1, width: 700 }}>
+                                        <FormControl sx={{ m: 1, width: 500 }}>
                                             <InputLabel id="demo-multiple-perfil-label">Perfil</InputLabel>
                                             <Select
                                                 labelId="demo-multiple-perfil-label"

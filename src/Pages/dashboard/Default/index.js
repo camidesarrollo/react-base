@@ -1,27 +1,45 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 // material-ui
-import { Grid } from '@mui/material';
+import { Grid } from "@mui/material";
 
-import EarningCard from '../EarningCard';
-import PopularCard from '../PopularCard';
-import TotalOrderLineChartCard from '../TotalOrderLineChartCard';
-import TotalIncomeDarkCard from '../TotalIncomeDarkCard';
-import TotalIncomeLightCard from '../TotalIncomeLightCard';
-import TotalGrowthBarChart from '../TotalGrowthBarChart';
-import { gridSpacing } from '../../../store/constant';
+import EarningCard from "../EarningCard";
+import MenuCard from "../MenuCard";
+import PopularCard from "../PopularCard";
+import TotalOrderLineChartCard from "../TotalOrderLineChartCard";
+import TotalIncomeDarkCard from "../TotalIncomeDarkCard";
+import TotalIncomeLightCard from "../TotalIncomeLightCard";
+import TotalGrowthBarChart from "../TotalGrowthBarChart";
+import { gridSpacing } from "../../../store/constant";
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => {
-    const [isLoading, setLoading] = useState(true);
-    useEffect(() => {
-        setLoading(false);
-    }, []);
+  const navItems = JSON.parse(window.localStorage.getItem("menuData"));
 
-    return (
-        <Grid container spacing={gridSpacing}>
-            <Grid item xs={12}>
-                <Grid container spacing={gridSpacing}>
+  const [isLoading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(false);
+    navItems.map(function (object, i) {
+      object.submenu.map(function (object_2, i) {
+        console.log("X");
+      });
+    });
+  }, []);
+
+  return (
+    <Grid container spacing={gridSpacing}>
+      <Grid item xs={12}>
+        {navItems.map(function (object, i) {
+             return ( <Grid key={i} container spacing={gridSpacing}>
+           
+                {object.submenu.map(function (object_2, x) {
+                    return (<Grid item lg={4} md={6} sm={6} xs={12}> <MenuCard isLoading={isLoading} menuName = {object.menu_title} submenuName = {object_2.menu_title}/> </Grid>)
+                })}
+            </Grid>)
+        })}
+        {/* <Grid container spacing={gridSpacing}>
+               
                     <Grid item lg={4} md={6} sm={6} xs={12}>
                         <EarningCard isLoading={isLoading} />
                     </Grid>
@@ -38,9 +56,9 @@ const Dashboard = () => {
                             </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
-            </Grid>
-            <Grid item xs={12}>
+                </Grid> */}
+      </Grid>
+      {/* <Grid item xs={12}>
                 <Grid container spacing={gridSpacing}>
                     <Grid item xs={12} md={8}>
                         <TotalGrowthBarChart isLoading={isLoading} />
@@ -49,9 +67,9 @@ const Dashboard = () => {
                         <PopularCard isLoading={isLoading} />
                     </Grid>
                 </Grid>
-            </Grid>
-        </Grid>
-    );
+            </Grid> */}
+    </Grid>
+  );
 };
 
 export default Dashboard;
